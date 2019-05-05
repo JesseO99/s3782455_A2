@@ -8,6 +8,7 @@ import utilities.DateUtilities;
  * This class can be used by other objects not just cars.
  * Author: Rodney Cocker
  */
+//
 public class Booking {
 	
 	private String id;
