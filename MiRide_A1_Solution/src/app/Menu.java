@@ -86,7 +86,7 @@ public class Menu
 			// Get details required for creating a car.
 			System.out.print("Enter Make: ");
 			make = console.nextLine();
-
+			
 			System.out.print("Enter Model: ");
 			model = console.nextLine();
 

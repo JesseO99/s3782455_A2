@@ -41,4 +41,32 @@ public class DateUtilities {
 		}
 		return within7Days;
 	}
+	
+	public static boolean dateIsNotMoreThan3Days(DateTime date)
+	{
+		boolean within3Days = false;
+		DateTime today = new DateTime();
+		DateTime nextWeek = new DateTime(3);
+		
+		int daysInFuture = DateTime.diffDays(nextWeek, date);
+		if(daysInFuture > 0 && daysInFuture < 4)
+		{
+			within3Days = true;
+		}
+		return within3Days;
+	}
+	
+	public static boolean dateIsNotMoreThanXDays(DateTime date, int x)
+	{
+		boolean within3Days = false;
+		DateTime today = new DateTime();
+		DateTime limit = new DateTime(x);
+		
+		int daysInFuture = DateTime.diffDays(limit, date);
+		if(daysInFuture > 0 && daysInFuture < x + 1)
+		{
+			within3Days = true;
+		}
+		return within3Days;
+	}
 }

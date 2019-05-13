@@ -20,18 +20,21 @@ public class Car
 	private String driverName;
 	private int passengerCapacity;
 
+	// Constants
+	private final double STANDARD_BOOKING_FEE = 1.5;
+	private final int MAXIUM_PASSENGER_CAPACITY = 10;
+	private final int MINIMUM_PASSENGER_CAPACITY = 1;
+	
 	// Tracking bookings
 	private Booking[] currentBookings;
 	private Booking[] pastBookings;
 	private boolean available;
 	private int bookingSpotAvailable = 0;
 	private double tripFee = 0;
+	private double bookingFee = STANDARD_BOOKING_FEE;
+	private int bookAdvanced = 7;
 
-	// Constants
-	private final double STANDARD_BOOKING_FEE = 1.5;
-	private final int MAXIUM_PASSENGER_CAPACITY = 10;
-	private final int MINIMUM_PASSENGER_CAPACITY = 1;
-
+	
 	public Car(String regNo, String make, String model, String driverName, int passengerCapacity)
 	{
 		setRegNo(regNo); // Validates and sets registration number
@@ -80,13 +83,17 @@ public class Car
 		// Booking is permissible
 		if (available && dateAvailable && dateValid && validPassengerNumber)
 		{
-			tripFee = STANDARD_BOOKING_FEE;
-			Booking booking = new Booking(firstName, lastName, required, numPassengers, this);
-			currentBookings[bookingSpotAvailable] = booking;
-			bookingSpotAvailable++;
+			bookCar(firstName, lastName, required, numPassengers);
 			booked = true;
 		}
 		return booked;
+	}
+	private void bookCar(String firstName, String lastName, DateTime required, int numPassengers)
+	{
+		tripFee = bookingFee;
+		Booking booking = new Booking(firstName, lastName, required, numPassengers, this);
+		currentBookings[bookingSpotAvailable] = booking;
+		bookingSpotAvailable++;
 	}
 
 	/*
@@ -207,6 +214,7 @@ public class Car
 		if (available)
 		{
 			sb.append(":" + "YES");
+			for(int i)
 		} else
 		{
 			sb.append(":" + "NO");
@@ -356,7 +364,7 @@ public class Car
 	 */
 	private boolean dateIsValid(DateTime date)
 	{
-		return DateUtilities.dateIsNotInPast(date) && DateUtilities.dateIsNotMoreThan7Days(date);
+		return DateUtilities.dateIsNotInPast(date) && DateUtilities.dateIsNotMoreThanXDays(date, bookAdvanced);
 	}
 
 	/*
@@ -425,5 +433,54 @@ public class Car
 		{
 			this.passengerCapacity = -1;
 		}
+	}
+	
+	public void setBookingFee(double bookingFee)
+	{
+		bookingFee = this.bookingFee;
+	}
+	public double getBookingFee()
+	{
+		return bookingFee;
+	}
+	
+	public void setBookAdvanced(int bookAdvanced)
+	{
+		this.bookAdvanced = bookAdvanced;
+	}
+	public String getCurrentBookings()
+	{
+		String currentBookingsDetails = "Current Bookings:\n";
+		for(int i = 0 ; i < currentBookings.length; i = i + 1)
+		{
+			if(currentBookings[i] != null)
+			{
+				currentBookingsDetails = currentBookings[i].getDetails() + "\n";
+			}
+			else
+			{
+				break;
+			}
+		}
+		
+		return currentBookingsDetails;
+	}
+	
+	public String getPastBookings()
+	{
+		String pastBookingsDetails = "PastBookings:\n";
+		for(int i = 0 ; i < pastBookings.length; i = i + 1)
+		{
+			if(pastBookings[i] != null)
+			{
+				pastBookingsDetails = pastBookings[i].getDetails() + "\n";
+			}
+			else
+			{
+				break;
+			}
+		}
+		
+		return pastBookingsDetails;
 	}
 }
