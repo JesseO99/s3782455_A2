@@ -218,7 +218,20 @@ public class Car
 		{
 			sb.append(":" + "NO");
 		}
-
+		for(int i = 0; i < currentBookings.length; i = i + 1)
+		{
+			if(currentBookings[i] != null)
+			{
+				sb.append(":" + currentBookings[i].toString());
+			}
+		}
+		for(int j = 0; j < pastBookings.length; j = j + 1)
+		{
+			if(pastBookings[j] != null)
+			{
+				sb.append(":" + pastBookings[j].toString());
+			}
+		}
 		return sb.toString();
 	}
 
