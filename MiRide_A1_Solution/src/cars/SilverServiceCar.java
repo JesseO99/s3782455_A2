@@ -29,7 +29,12 @@ public class SilverServiceCar extends Car
 	@Override
 	public boolean book(String firstName, String lastName, DateTime required, int numPassengers )
 	{
-		return super.book(firstName, lastName, required, numPassengers);
+		boolean booked = false;
+		if(DateUtilities.dateIsNotMoreThanXDays(required, 3))
+		{
+			booked = super.book(firstName, lastName, required, numPassengers);
+		}
+		return booked;
 	}
 	private void setRefreshments(String refreshment)
 	{
@@ -64,8 +69,15 @@ public class SilverServiceCar extends Car
 	@Override
 	public String toString()
 	{
-		String string = super.toString();
-		
-		return string;
+		StringBuilder sb = new StringBuilder();
+		sb.append(super.toString());
+		for(int i = 0; i < refreshments.length; i = i + 1)
+		{
+			if(refreshments[i] != null)
+			{
+				sb.append(":" + refreshments[i]);
+			}
+		}
+		return sb.toString();
 	}
 }

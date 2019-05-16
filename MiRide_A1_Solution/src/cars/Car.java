@@ -214,7 +214,6 @@ public class Car
 		if (available)
 		{
 			sb.append(":" + "YES");
-			for(int i)
 		} else
 		{
 			sb.append(":" + "NO");
