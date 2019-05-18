@@ -13,12 +13,11 @@ public class SilverServiceCar extends Car
 		super.setBookingFee(bookingFee);
 		super.setBookAdvanced(3);
 		int refLength = refreshments.length;
-		for (int i = 0 ; i <= refLength; i = i++)
+		for (int i = 0 ; i < refLength; i = i++)
 		{
 			if(refreshments[i] != null)
 			{
 				setRefreshments(refreshments[i]);
-				
 			}
 			else
 			{
@@ -38,7 +37,7 @@ public class SilverServiceCar extends Car
 	}
 	private void setRefreshments(String refreshment)
 	{
-		for(int i = 0; i <= refreshments.length; i = i + 1)
+		for(int i = 0; i < refreshments.length; i = i + 1)
 		{
 			if(refreshments[i] == null)
 			{

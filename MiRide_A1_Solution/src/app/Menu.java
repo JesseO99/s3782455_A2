@@ -7,7 +7,7 @@ import utilities.DateUtilities;
 /*
  * Class:		Menu
  * Description:	The class a menu and is used to interact with the user. 
- * Author:		Rodney Cocker
+ * Author:		Rodney Cocker & Jesse Osrecak
  */
 public class Menu
 {
@@ -61,6 +61,7 @@ public class Menu
 					break;
 				case "EX":
 					System.out.println("Exiting Program ... Goodbye!");
+					choice = "EX";
 					break;
 				default:
 					System.out.println("Error, invalid option selected!");
@@ -78,7 +79,9 @@ public class Menu
 	{
 		String id = "", make, model, driverName;
 		int numPassengers = 0;
-
+		String refreshments[];
+		String type;
+		
 		System.out.print("Enter registration number: ");
 		id = promptUserForRegNo();
 		if (id.length() != 0)
@@ -97,15 +100,30 @@ public class Menu
 			numPassengers = Integer.parseInt(console.nextLine());
 
 			boolean result = application.checkIfCarExists(id);
-
-			if (!result)
+			
+			System.out.println("Enter Service Type (SD/SS)");
+			type = promptUserForCarType();
+			
+			if (!result && type.equals("SD"))
 			{
 				String carRegistrationNumber = application.createCar(id, make, model, driverName, numPassengers);
 				System.out.println(carRegistrationNumber);
-			} else
+			} 
+			else if(!result && type.equals("SS"))
+			{
+				System.out.println("Enter a booking Fee (minimum $3.00)");
+				double fee = getBookingFee();
+				System.out.println("Enter a list of refreshments seperated by a comma ','");
+				String refreshmentsList = console.nextLine();
+
+				String carRegistrationNumber =  application.createSilverCar(id, make, model, driverName, numPassengers, fee, refreshmentsList);
+			}
+			else
 			{
 				System.out.println("Error - Already exists in the system");
 			}
+			
+			
 		}
 	}
 
@@ -267,4 +285,57 @@ public class Menu
 		System.out.println("\nEnter your selection: ");
 		System.out.println("(Hit enter to cancel any operation)");
 	}
+	private String promptUserForCarType()
+	{
+		boolean ctSuccess = false;
+		String choice = "";
+		while(!ctSuccess)
+		{
+			choice = console.nextLine().toUpperCase();
+			if( choice.equals("SD") || choice.equals("SS"))
+			{
+				ctSuccess = true;
+				break; 
+			}
+			else if(choice.equals(""))
+			{
+				break;
+			}
+			else
+			{
+				System.out.println("Please print a car type (SD/SS) or press enter with no text to exit");
+			}
+		}
+		return choice;
+	}
+	
+	private double getBookingFee()
+	{
+		double bookingFee = 0;
+		boolean bf = false;
+		while(!bf)
+		{
+			bookingFee = 0;
+			System.out.print("$");
+			bookingFee = console.nextDouble();
+			console.nextLine();
+			if(bookingFee == 0)
+			{
+				break;
+			}
+			else if(bookingFee < 3.00)
+			{
+				System.out.println("This is an ivalid booking fee \n"
+						+ "A booking fee for a silver service must be greater than $3.00.\n"
+						+ "(Or press enter with no text to exit");
+			}
+			else
+			{
+				break;
+			}
+		}
+		return bookingFee;
+	}
+	
+	
 }

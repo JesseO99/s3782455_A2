@@ -1,6 +1,7 @@
 package app;
 
 import cars.Car;
+import cars.SilverServiceCar;
 import utilities.DateTime;
 import utilities.MiRidesUtilities;
 
@@ -8,11 +9,12 @@ import utilities.MiRidesUtilities;
  * Class:			MiRideApplication
  * Description:		The system manager the manages the 
  *              	collection of data. 
- * Author:			Rodney Cocker
+ * Author:			Rodney Cocker & Jesse Osrecak
  */
 public class MiRideApplication
 {
 	private Car[] cars = new Car[15];
+	
 	private int itemCount = 0;
 	private String[] availableCars;
 
@@ -299,5 +301,21 @@ public class MiRideApplication
 			}
 		}
 		return car;
+	}
+	
+	public  String createSilverCar(String id, String make, String model, String driverName, int numPassengers, double fee, String refreshmentsList)
+	{
+		
+		String validId = isValidId(id);
+		if(isValidId(id).contains("Error:"))
+		{
+			return validId;
+		}
+		if(!checkIfCarExists(id)) {
+			cars[itemCount] = new SilverServiceCar(id, make, model, driverName, numPassengers, fee, refreshmentsList.split(","));
+			itemCount++;
+			return "New Car added successfully for registion number: " + cars[itemCount-1].getRegistrationNumber();
+		}
+		return "Error: Already exists in the system.";
 	}
 }

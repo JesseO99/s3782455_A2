@@ -9,7 +9,7 @@ import utilities.MiRidesUtilities;
 /*
  * Class:		Car
  * Description:	The class represents a car in a ride sharing system. 
- * Author:		Rodney Cocker
+ * Author:		Rodney Cocker & Jesse Osrecak
  */
 public class Car
 {
