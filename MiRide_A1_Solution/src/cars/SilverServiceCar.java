@@ -13,7 +13,8 @@ public class SilverServiceCar extends Car
 		super.setBookingFee(bookingFee);
 		super.setBookAdvanced(3);
 		int refLength = refreshments.length;
-		for (int i = 0 ; i < refLength; i = i++)
+		System.out.println(refLength);
+		for (int i = 0 ; i < refLength; i = i + 1)
 		{
 			if(refreshments[i] != null)
 			{
