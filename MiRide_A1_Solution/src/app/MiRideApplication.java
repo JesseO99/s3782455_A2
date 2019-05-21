@@ -318,4 +318,62 @@ public class MiRideApplication
 		}
 		return "Error: Already exists in the system.";
 	}
+	
+	public String searchAvailible(String type, DateTime required)
+	{
+		Car[] carsTemp = new Car[15];
+		Car[] ssTemp = new Car[15];
+		for(int i = 0; i < cars.length; i = i + 1)
+		{
+			if(cars[i] instanceof SilverServiceCar)
+			{
+				for(int j = 0; j < ssTemp.length; j = j + 1) 
+				{
+					if(ssTemp[j] == null)
+					{
+						ssTemp[j] = cars[i];
+						break;
+					}
+				}
+			}
+			else if(cars[i] instanceof Car)
+			{
+				for(int j = 0; j < ssTemp.length; j = j + 1) 
+				{
+					if(carsTemp[j] == null)
+					{
+						carsTemp[j] = cars[i];
+						break;
+					}
+				}
+			}
+		}
+		
+		String avaCars = "";
+		if(type.matches("SS"))
+		{
+			for(int i = 0; i < ssTemp.length; i = i + 1)
+			{
+				if(ssTemp[i] != null && ssTemp[i].bookingOnDate(required) && ssTemp[i].bookingAvailable())
+				{
+					avaCars = avaCars + ssTemp[i].getDetails();
+				}
+			}
+		}
+		else if(type.matches("SD"))
+		{
+			for(int i = 0; i < carsTemp.length; i = i + 1)
+			{
+				if(carsTemp[i] != null && carsTemp[i].bookingOnDate(required) && carsTemp[i].bookingAvailable())
+				{
+					avaCars = avaCars + carsTemp[i].getDetails();
+				}
+			}
+		}
+		if(avaCars.contentEquals(""))
+		{
+			avaCars = "Error - no cars were found on this date";
+		}
+		return avaCars;
+	}
 }

@@ -43,6 +43,7 @@ public class SilverServiceCar extends Car
 			if(refreshments[i] == null)
 			{
 				refreshments[i] = refreshment;
+				break;
 			}
 		}
 			
@@ -55,15 +56,15 @@ public class SilverServiceCar extends Car
 		{
 			if(refreshments[i] != null)
 			{
-				details = details + "Items " + i + " " + refreshments[i] + "\n";
+				details = details + "Item" + i + "			" + refreshments[i] + "\n";
 			}
 			else
 			{
 				break;
 			}
-			
-			details = details + super.getCurrentBookings() + super.getPastBookings();
 		}
+		details = details + super.getCurrentBookings();
+		details = details + super.getPastBookings();
 		return details;
 	}
 	@Override

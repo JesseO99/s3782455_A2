@@ -56,6 +56,9 @@ public class Menu
 					System.out.print("Enter Registration Number: ");
 					System.out.println(application.displaySpecificCar(console.nextLine()));
 					break;
+				case "SA":
+					System.out.println(searchAvailible());
+					break;
 				case "SD":
 					application.seedData();
 					break;
@@ -335,6 +338,21 @@ public class Menu
 			}
 		}
 		return bookingFee;
+	}
+	
+	private String searchAvailible()
+	{
+		System.out.println("Please enter the car type (SD, SS)");
+		String type = console.nextLine().toUpperCase();
+		System.out.println("Enter date car required: ");
+		System.out.println("format DD/MM/YYYY)");
+		String dateEntered = console.nextLine();
+		int day = Integer.parseInt(dateEntered.substring(0, 2));
+		int month = Integer.parseInt(dateEntered.substring(3, 5));
+		int year = Integer.parseInt(dateEntered.substring(6));
+		DateTime dateRequired = new DateTime(day, month, year);	
+		
+		return application.searchAvailible(type, dateRequired);
 	}
 	
 	

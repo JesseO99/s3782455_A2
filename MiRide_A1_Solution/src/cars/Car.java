@@ -383,7 +383,7 @@ public class Car
 	 * Indicates if a booking spot is available. If it is then the index of the
 	 * available spot is assigned to bookingSpotFree.
 	 */
-	private boolean bookingAvailable()
+	public boolean bookingAvailable()
 	{
 		for (int i = 0; i < currentBookings.length; i++)
 		{
@@ -467,7 +467,7 @@ public class Car
 		{
 			if(currentBookings[i] != null)
 			{
-				currentBookingsDetails = currentBookings[i].getDetails() + "\n";
+				currentBookingsDetails = currentBookingsDetails + currentBookings[i].getDetails() + "\n";
 			}
 			else
 			{
@@ -485,7 +485,7 @@ public class Car
 		{
 			if(pastBookings[i] != null)
 			{
-				pastBookingsDetails = pastBookings[i].getDetails() + "\n";
+				pastBookingsDetails = pastBookingsDetails +  pastBookings[i].getDetails() + "\n";
 			}
 			else
 			{
@@ -495,4 +495,10 @@ public class Car
 		
 		return pastBookingsDetails;
 	}
+	
+	public boolean bookingOnDate(DateTime required)
+	{
+		return !notCurrentlyBookedOnDate(required);
+	}
+
 }
