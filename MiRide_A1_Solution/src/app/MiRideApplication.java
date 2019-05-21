@@ -235,20 +235,138 @@ public class MiRideApplication
 		return true;
 	}
 
-	public String displayAllBookings()
+	public String displayAllBookings(String type, String order)
 	{
 		if(itemCount == 0)
 		{
 			return "No cars have been added to the system.";
 		}
+		Car[] carsTemp = new Car[15];
+		Car[] ssTemp = new Car[15];
 		StringBuilder sb = new StringBuilder();
 		sb.append("Summary of all cars: ");
 		sb.append("\n");
-
-		for (int i = 0; i < itemCount; i++)
+		for(int i = 0; i < cars.length; i = i + 1)
 		{
-			sb.append(cars[i].getDetails());
+			if(cars[i] instanceof SilverServiceCar)
+			{
+				for(int j = 0; j < ssTemp.length; j = j + 1) 
+				{
+					if(ssTemp[j] != null)
+					{
+						ssTemp[j] = cars[i];
+						break;
+					}
+				}
+			}
+			else if(cars[i] instanceof Car)
+			{
+				for(int j = 0; j < carsTemp.length; j = j + 1) 
+				{
+					if(carsTemp[j] == null)
+					{
+						carsTemp[j] = cars[i];
+						break;
+					}
+				}
+			}
 		}
+
+		boolean sorted = false;
+		while(!sorted)
+		{
+			System.out.println(1);
+			sorted = true;
+			for(int i = 0; i < ssTemp.length ; i = i + 1)
+			{
+
+				if(ssTemp[i + 1] == null)
+				{
+					break;
+				}				
+				String currentCar = ssTemp[i].getRegistrationNumber();
+				String nextCar = ssTemp[i + 1].getRegistrationNumber();
+				if(order.contentEquals("A"))
+				{
+					boolean sortedAscending = currentCar.compareTo(nextCar) < 0;
+					if(!sortedAscending)
+					{
+						Car temp = ssTemp[i];
+						ssTemp[i] = ssTemp[i+1];
+						ssTemp[i+1] = temp;
+						sorted = false;
+					}
+				} 
+				else
+				{
+					boolean sortedDescending = currentCar.compareTo(nextCar) > 0;
+					if(!sortedDescending)
+					{
+						Car temp = ssTemp[i];
+						ssTemp[i] = ssTemp[i+1];
+						ssTemp[i+1] = temp;
+						sorted = false;
+					}
+				}	
+			}
+			for(int i = 0; i < carsTemp.length ; i = i + 1) 
+			{
+				if(carsTemp[i + 1] == null)
+				{
+					break;
+				}				
+				String currentCar = carsTemp[i].getRegistrationNumber();
+				String nextCar = carsTemp[i + 1].getRegistrationNumber();
+				if(order.contentEquals("A"))
+				{
+					boolean sortedAscending = currentCar.compareTo(nextCar) < 0;
+					if(!sortedAscending)
+					{
+						Car temp = carsTemp[i];
+						carsTemp[i] = carsTemp[i+1];
+						carsTemp[i+1] = temp;
+						sorted = false;
+					}
+				} 
+				else
+				{
+					boolean sortedDescending = currentCar.compareTo(nextCar) > 0;
+					if(!sortedDescending)
+					{
+						Car temp = carsTemp[i];
+						carsTemp[i] = carsTemp[i+1];
+						carsTemp[i+1] = temp;
+						sorted = false;
+					}
+				}
+			}
+		}
+
+		if(type.matches("SS"))
+		{
+			for(int j = 0; j < ssTemp.length; j = j + 1) 
+			{
+				if(ssTemp[j] != null)					
+				{
+					sb.append(ssTemp[j].getDetails());
+				}
+			}
+			
+		}
+		else if(type.matches("SD"))
+		{
+			for(int j = 0; j < carsTemp.length; j = j + 1) 
+			{
+				if(carsTemp[j] != null)					
+				{
+					sb.append(carsTemp[j].getDetails());
+				}
+			}
+		}
+		
+
+
+
 		return sb.toString();
 	}
 
@@ -376,4 +494,6 @@ public class MiRideApplication
 		}
 		return avaCars;
 	}
+	
+	
 }

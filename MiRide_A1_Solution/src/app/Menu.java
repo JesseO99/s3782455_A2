@@ -50,7 +50,7 @@ public class Menu
 					completeBooking();
 					break;
 				case "DA":
-					System.out.println(application.displayAllBookings());
+					System.out.println(application.displayAllBookings(getCarType(), sortType()));
 					break;
 				case "SS":
 					System.out.print("Enter Registration Number: ");
@@ -342,8 +342,7 @@ public class Menu
 	
 	private String searchAvailible()
 	{
-		System.out.println("Please enter the car type (SD, SS)");
-		String type = console.nextLine().toUpperCase();
+		String type = getCarType();
 		System.out.println("Enter date car required: ");
 		System.out.println("format DD/MM/YYYY)");
 		String dateEntered = console.nextLine();
@@ -355,5 +354,18 @@ public class Menu
 		return application.searchAvailible(type, dateRequired);
 	}
 	
+	private String getCarType()
+	{
+		System.out.println("Please enter the car type (SD/SS)");
+		String type = console.nextLine().toUpperCase();
+		return type;
+	}
+	
+	private String sortType()
+	{
+		System.out.println("Enter sort order (A/D)");
+		String order = console.nextLine().toUpperCase();
+		return order;
+	}
 	
 }
