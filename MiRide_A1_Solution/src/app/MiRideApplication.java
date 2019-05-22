@@ -215,6 +215,7 @@ public class MiRideApplication
 		Car toyota = new Car("TOY765", "Toyota", "Corola", "Tina Turner", 7);
 		cars[itemCount] = toyota;
 		itemCount++;
+		
 		toyota.book("Rodney", "Cocker", new DateTime(1), 3);
 		toyota.book("Craig", "Cocker", new DateTime(2), 7);
 		toyota.book("Alan", "Smith", new DateTime(3), 3);
@@ -232,6 +233,45 @@ public class MiRideApplication
 		DateTime inTwoDays = new DateTime(2);
 		rover.book("Rodney", "Cocker", inTwoDays, 3);
 		rover.completeBooking("Rodney", "Cocker", inTwoDays,75);
+		
+		String[] porcheRefreshments= new String[5];
+		porcheRefreshments[0] = "Water"; porcheRefreshments[1] = "Chocolate"; porcheRefreshments[2] = "Pepsi"; porcheRefreshments[3] = "Lemonade"; porcheRefreshments[4] = "Chocolate-Chip Cookies";	
+		SilverServiceCar porche = new SilverServiceCar("XDF255", "Porche", "Panamera", "Mathew Stormblessed", 3, 4.50,porcheRefreshments);
+		
+		String[] lamRefreshments = new String[4]; 
+		lamRefreshments[0] = "Water"; lamRefreshments[1] = "Mints"; lamRefreshments[2] = "Coca-Cola"; lamRefreshments[3] = "Sparkling Water";
+		SilverServiceCar lamborghini = new SilverServiceCar("REF963", "Lamborghini", "URUS", "Jim Logan", 1, 3.45, lamRefreshments);
+		
+		String[] ferRefreshments = new String[3];
+		ferRefreshments[0] = "Water"; ferRefreshments[1] = "Fanta"; ferRefreshments[2] = "Oreos";
+		SilverServiceCar ferrai = new SilverServiceCar("HUT596", "Ferrari", "Portofino", "Sebastian Vettel", 1, 5.90, ferRefreshments);
+		
+		String[] forRefreshments = new String[6];
+		forRefreshments[0] = "ButterBeer"; forRefreshments[1] = "Chocolate Frogs"; forRefreshments[2] = "Bertie Bott's Every Flavour Beans";
+		forRefreshments[3] = "Fizzing Whizzbees"; forRefreshments[4] = "Pumpkin Pasties"; forRefreshments[5] = "Licorice Wands";
+		SilverServiceCar ford = new SilverServiceCar("COS207", "Ford", "Angila 105E", "Ronald Weasley", 4, 999.99, forRefreshments);
+		
+		String[] bikRefreshments = new String[3];
+		bikRefreshments[0] = "Water"; bikRefreshments[1] = "Red Bull"; bikRefreshments[2] = "V";
+		SilverServiceCar bike = new SilverServiceCar("NRN000", "Shimano", "Ultegra", "Lance ArmStrong", 1, 3.20, bikRefreshments);
+		
+		SilverServiceCar aRomeo = new SilverServiceCar("ITA006", "Alfa Romeo", "Giulia", "Julia formaggio", 3, 3.60, lamRefreshments);
+		
+		bike.book("Twiggie", "Leon", new DateTime(2), 1);
+		ferrai.book("Lee", "Leverett", new DateTime(2), 1);
+		aRomeo.book("Nick", "Tafazoli", new DateTime(1), 2);
+		porche.book("Simon", "Holmqvist", new DateTime(1), 3);
+		
+		ferrai.completeBooking("Lee", "Leverett", 28);
+		porche.completeBooking("Simon", "Holmqvist", 18);
+		
+		cars[itemCount] = porche; itemCount++;
+		cars[itemCount] = lamborghini; itemCount++;
+		cars[itemCount] = ferrai; itemCount++;
+		cars[itemCount] = ford; itemCount++;
+		cars[itemCount] = bike; itemCount++;
+		cars[itemCount] = aRomeo; itemCount++;
+		
 		return true;
 	}
 
@@ -252,9 +292,11 @@ public class MiRideApplication
 			{
 				for(int j = 0; j < ssTemp.length; j = j + 1) 
 				{
-					if(ssTemp[j] != null)
+					
+					if(ssTemp[j] == null)
 					{
 						ssTemp[j] = cars[i];
+
 						break;
 					}
 				}
@@ -275,7 +317,6 @@ public class MiRideApplication
 		boolean sorted = false;
 		while(!sorted)
 		{
-			System.out.println(1);
 			sorted = true;
 			for(int i = 0; i < ssTemp.length ; i = i + 1)
 			{
