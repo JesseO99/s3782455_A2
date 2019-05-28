@@ -200,8 +200,16 @@ public class Menu
 			int month = Integer.parseInt(response.substring(3, 5));
 			int year = Integer.parseInt(response.substring(6));
 			DateTime dateOfBooking = new DateTime(day, month, year);
-			result = application.completeBooking(firstName, lastName, dateOfBooking, kilometers);
-		} else
+			try
+			{
+				result = application.completeBooking(firstName, lastName, dateOfBooking, kilometers);
+			}
+			catch(Exception ex)
+			{
+				System.out.println(ex.getMessage());
+			}
+		} 
+		else
 		{
 			
 			System.out.print("Enter First Name:");
@@ -254,16 +262,16 @@ public class Menu
 				{
 					break;
 				}
-
-				String validId = application.isValidId(regNo);
-				if (validId.contains("Error:"))
+				try
 				{
-					System.out.println(validId);
+					String validId = application.isValidId(regNo);
+					validRegistrationNumber = true;
+				}
+				catch(Exception ex)
+				{
+					System.out.println(ex.getMessage());
 					System.out.println("Enter registration number: ");
 					System.out.println("(or hit ENTER to exit)");
-				} else
-				{
-					validRegistrationNumber = true;
 				}
 			}
 			return regNo;

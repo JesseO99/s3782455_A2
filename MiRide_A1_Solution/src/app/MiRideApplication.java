@@ -25,15 +25,26 @@ public class MiRideApplication
 	
 	public String createCar(String id, String make, String model, String driverName, int numPassengers) 
 	{
-		String validId = isValidId(id);
-		if(isValidId(id).contains("Error:"))
+		try
 		{
-			return validId;
+			isValidId(id);
 		}
-		if(!checkIfCarExists(id)) {
-			cars[itemCount] = new Car(id, make, model, driverName, numPassengers);
-			itemCount++;
-			return "New Car added successfully for registion number: " + cars[itemCount-1].getRegistrationNumber();
+		catch(Exception ex)
+		{
+			return ex.getMessage();
+		}
+		if(!checkIfCarExists(id)) 
+		{
+			try
+			{
+				cars[itemCount] = new Car(id, make, model, driverName, numPassengers);
+				itemCount++;
+				return "New Car added successfully for registion number: " + cars[itemCount-1].getRegistrationNumber();
+			}
+			catch(Exception ex)
+			{
+				return ex.getMessage();
+			}
 		}
 		return "Error: Already exists in the system.";
 	}
@@ -75,23 +86,31 @@ public class MiRideApplication
 		return availableCars;
 	}
 	
-	public String book(String firstName, String lastName, DateTime required, int numPassengers, String registrationNumber)
+	public String book(String firstName, String lastName, DateTime required, int numPassengers, String registrationNumber) 
 	{
-		Car car = getCarById(registrationNumber);
-		if(car != null)
-        {
-            car.book(firstName, lastName, required, numPassengers);
-		    String message = "Thank you for your booking. \n" + car.getDriverName() 
-		        + " will pick you up on " + required.getFormattedDate() + ". \n"
-				+ "Your booking reference is: " + car.getBookingID(firstName, lastName, required);
-		    return message;
-        }
-        else{
-            return "Car with registration number: " + registrationNumber + " was not found.";
-        }
+		try
+		{
+			Car car = getCarById(registrationNumber);
+			if(car != null)
+			{
+	            car.book(firstName, lastName, required, numPassengers);
+	           	String message = "Thank you for your booking. \n" + car.getDriverName() 
+	           		+ " will pick you up on " + required.getFormattedDate() + ". \n"
+					+ "Your booking reference is: " + car.getBookingID(firstName, lastName, required);
+	           	return message;
+	        }
+	        else
+	        {
+	            return "Car with registration number: " + registrationNumber + " was not found.";
+	        }
+		}
+		catch(Exception ex)
+		{
+			return ex.getMessage();
+		}
 	}
 	
-	public String completeBooking(String firstName, String lastName, DateTime dateOfBooking, double kilometers)
+	public String completeBooking(String firstName, String lastName, DateTime dateOfBooking, double kilometers) throws Exception
 	{
 		String result = "";
 		
@@ -100,14 +119,21 @@ public class MiRideApplication
 		{
 			if (cars[i] != null)
 			{
-				result = cars[i].completeBooking(firstName, lastName, dateOfBooking, kilometers);
-				if(!result.equals("Booking not found"))
+				try
 				{
-					return result;
+					result = cars[i].completeBooking(firstName, lastName, dateOfBooking, kilometers);
+					if(!result.equals("Booking not found"))
+					{
+						return result;
+					}
+				}
+				catch(Exception ex)
+				{
+					continue;
 				}
 			}
 		}
-		return "Booking not found.";
+		throw new Exception("Booking not found for " + firstName + " " + lastName + " for " + dateOfBooking.toString());
 	}
 	
 	public String completeBooking(String firstName, String lastName, String registrationNumber, double kilometers)
@@ -131,9 +157,16 @@ public class MiRideApplication
 		{
 			return carNotFound;
 		}
-		if (car.getBookingByName(firstName, lastName) != -1)
+		try
 		{
-			return car.completeBooking(firstName, lastName, kilometers);
+			if (car.getBookingByName(firstName, lastName) != -1)
+			{
+				return car.completeBooking(firstName, lastName, kilometers);
+			}
+		}
+		catch(Exception ex)
+		{
+			return ex.getMessage() + " for the car with registration nummber " + registrationNumber;
 		}
 		return "Error: Booking not found.";
 	}
@@ -154,7 +187,6 @@ public class MiRideApplication
 				}
 			}
 		}
-		
 		if(car == null)
 		{
 			return false;
@@ -190,88 +222,169 @@ public class MiRideApplication
 			}
 		}
 		// 2 cars not booked
-		Car honda = new Car("SIM194", "Honda", "Accord Euro", "Henry Cavill", 5);
-		cars[itemCount] = honda;
-		honda.book("Craig", "Cocker", new DateTime(1), 3);
-		itemCount++;
+		try
+		{
+			Car honda = new Car("SIM194", "Honda", "Accord Euro", "Henry Cavill", 5);
+			cars[itemCount] = honda;
+			itemCount++;
+			honda.book("Craig", "Cocker", new DateTime(1), 3);
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
 		
-		Car lexus = new Car("LEX666", "Lexus", "M1", "Angela Landsbury", 3);
-		cars[itemCount] = lexus;
-		lexus.book("Craig", "Cocker", new DateTime(1), 3);
-		itemCount++;
-		
+		try
+		{
+			Car lexus = new Car("LEX666", "Lexus", "M1", "Angela Landsbury", 3);
+			cars[itemCount] = lexus;
+			itemCount++;
+			lexus.book("Craig", "Cocker", new DateTime(1), 3);
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
 		// 2 cars booked
-		Car bmw = new Car("BMW256", "Mini", "Minor", "Barbara Streisand", 4);
-		cars[itemCount] = bmw;
-		itemCount++;
-		bmw.book("Craig", "Cocker", new DateTime(1), 3);
+
+		try
+		{
+			Car bmw = new Car("BMW256", "Mini", "Minor", "Barbara Streisand", 4);
+			cars[itemCount] = bmw;
+			itemCount++;
+			bmw.book("Craig", "Cocker", new DateTime(1), 3);
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
 		
-		Car audi = new Car("AUD765", "Mazda", "RX7", "Matt Bomer", 6);
-		cars[itemCount] = audi;
-		itemCount++;
-		audi.book("Rodney", "Cocker", new DateTime(1), 4);
-		
+		try
+		{
+			Car audi = new Car("AUD765", "Mazda", "RX7", "Matt Bomer", 6);
+			cars[itemCount] = audi;
+			itemCount++;
+			audi.book("Rodney", "Cocker", new DateTime(1), 4);
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
 		// 1 car booked five times (not available)
-		Car toyota = new Car("TOY765", "Toyota", "Corola", "Tina Turner", 7);
-		cars[itemCount] = toyota;
-		itemCount++;
-		
-		toyota.book("Rodney", "Cocker", new DateTime(1), 3);
-		toyota.book("Craig", "Cocker", new DateTime(2), 7);
-		toyota.book("Alan", "Smith", new DateTime(3), 3);
-		toyota.book("Carmel", "Brownbill", new DateTime(4), 7);
-		toyota.book("Paul", "Scarlett", new DateTime(5), 7);
-		toyota.book("Paul", "Scarlett", new DateTime(6), 7);
-		toyota.book("Paul", "Scarlett", new DateTime(7), 7);
-		
+
+		try
+		{
+			Car toyota = new Car("TOY765", "Toyota", "Corola", "Tina Turner", 7);
+			cars[itemCount] = toyota;
+			itemCount++;
+			toyota.book("Rodney", "Cocker", new DateTime(1), 3);
+			toyota.book("Craig", "Cocker", new DateTime(2), 7);
+			toyota.book("Alan", "Smith", new DateTime(3), 3);
+			toyota.book("Carmel", "Brownbill", new DateTime(4), 7);
+			toyota.book("Paul", "Scarlett", new DateTime(5), 7);
+			toyota.book("Paul", "Scarlett", new DateTime(6), 7);
+			toyota.book("Paul", "Scarlett", new DateTime(7), 7);
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
+
 		// 1 car booked five times (not available)
-		Car rover = new Car("ROV465", "Honda", "Rover", "Jonathon Ryss Meyers", 7);
-		cars[itemCount] = rover;
-		itemCount++;
-		rover.book("Rodney", "Cocker", new DateTime(1), 3);
+
+		try
+		{
+			Car rover = new Car("ROV465", "Honda", "Rover", "Jonathon Ryss Meyers", 7);
+			cars[itemCount] = rover;
+			itemCount++;
+			rover.book("Rodney", "Cocker", new DateTime(1), 3);
+			DateTime inTwoDays = new DateTime(2);
+			rover.book("Rodney", "Cocker", inTwoDays, 3);
+			rover.completeBooking("Rodney", "Cocker", inTwoDays,75);
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
 		//rover.completeBooking("Rodney", "Cocker", 75);
-		DateTime inTwoDays = new DateTime(2);
-		rover.book("Rodney", "Cocker", inTwoDays, 3);
-		rover.completeBooking("Rodney", "Cocker", inTwoDays,75);
 		
-		String[] porcheRefreshments= new String[5];
-		porcheRefreshments[0] = "Water"; porcheRefreshments[1] = "Chocolate"; porcheRefreshments[2] = "Pepsi"; porcheRefreshments[3] = "Lemonade"; porcheRefreshments[4] = "Chocolate-Chip Cookies";	
-		SilverServiceCar porche = new SilverServiceCar("XDF255", "Porche", "Panamera", "Mathew Stormblessed", 3, 4.50,porcheRefreshments);
 		
+		try
+		{
 		String[] lamRefreshments = new String[4]; 
 		lamRefreshments[0] = "Water"; lamRefreshments[1] = "Mints"; lamRefreshments[2] = "Coca-Cola"; lamRefreshments[3] = "Sparkling Water";
 		SilverServiceCar lamborghini = new SilverServiceCar("REF963", "Lamborghini", "URUS", "Jim Logan", 1, 3.45, lamRefreshments);
-		
-		String[] ferRefreshments = new String[3];
-		ferRefreshments[0] = "Water"; ferRefreshments[1] = "Fanta"; ferRefreshments[2] = "Oreos";
-		SilverServiceCar ferrai = new SilverServiceCar("HUT596", "Ferrari", "Portofino", "Sebastian Vettel", 1, 5.90, ferRefreshments);
-		
-		String[] forRefreshments = new String[6];
-		forRefreshments[0] = "ButterBeer"; forRefreshments[1] = "Chocolate Frogs"; forRefreshments[2] = "Bertie Bott's Every Flavour Beans";
-		forRefreshments[3] = "Fizzing Whizzbees"; forRefreshments[4] = "Pumpkin Pasties"; forRefreshments[5] = "Licorice Wands";
-		SilverServiceCar ford = new SilverServiceCar("COS207", "Ford", "Angila 105E", "Ronald Weasley", 4, 999.99, forRefreshments);
-		
-		String[] bikRefreshments = new String[3];
-		bikRefreshments[0] = "Water"; bikRefreshments[1] = "Red Bull"; bikRefreshments[2] = "V";
-		SilverServiceCar bike = new SilverServiceCar("NRN000", "Shimano", "Ultegra", "Lance ArmStrong", 1, 3.20, bikRefreshments);
-		
-		SilverServiceCar aRomeo = new SilverServiceCar("ITA006", "Alfa Romeo", "Giulia", "Julia formaggio", 3, 3.60, lamRefreshments);
-		
-		bike.book("Twiggie", "Leon", new DateTime(2), 1);
-		ferrai.book("Lee", "Leverett", new DateTime(2), 1);
-		aRomeo.book("Nick", "Tafazoli", new DateTime(1), 2);
-		porche.book("Simon", "Holmqvist", new DateTime(1), 3);
-		
-		ferrai.completeBooking("Lee", "Leverett", 28);
-		porche.completeBooking("Simon", "Holmqvist", 18);
-		
-		cars[itemCount] = porche; itemCount++;
 		cars[itemCount] = lamborghini; itemCount++;
-		cars[itemCount] = ferrai; itemCount++;
-		cars[itemCount] = ford; itemCount++;
-		cars[itemCount] = bike; itemCount++;
-		cars[itemCount] = aRomeo; itemCount++;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
 		
+		try
+		{
+			String[] forRefreshments = new String[6];
+			forRefreshments[0] = "ButterBeer"; forRefreshments[1] = "Chocolate Frogs"; forRefreshments[2] = "Bertie Bott's Every Flavour Beans";
+			forRefreshments[3] = "Fizzing Whizzbees"; forRefreshments[4] = "Pumpkin Pasties"; forRefreshments[5] = "Licorice Wands";
+			SilverServiceCar ford = new SilverServiceCar("COS207", "Ford", "Angila 105E", "Ronald Weasley", 4, 999.99, forRefreshments);
+			cars[itemCount] = ford; itemCount++;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
+		
+		
+		try
+		{
+			String[] bikRefreshments = new String[3];
+			bikRefreshments[0] = "Water"; bikRefreshments[1] = "Red Bull"; bikRefreshments[2] = "V";
+			SilverServiceCar bike = new SilverServiceCar("NRN000", "Shimano", "Ultegra", "Lance ArmStrong", 1, 3.20, bikRefreshments);
+			bike.book("Twiggie", "Leon", new DateTime(2), 1);
+			cars[itemCount] = bike; itemCount++;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
+		try
+		{
+			String[] ferRefreshments = new String[3];
+			ferRefreshments[0] = "Water"; ferRefreshments[1] = "Fanta"; ferRefreshments[2] = "Oreos";
+			SilverServiceCar ferrai = new SilverServiceCar("HUT596", "Ferrari", "Portofino", "Sebastian Vettel", 1, 5.90, ferRefreshments);
+			ferrai.book("Lee", "Leverett", new DateTime(2), 1);
+			ferrai.completeBooking("Lee", "Leverett", 28);
+			cars[itemCount] = ferrai; itemCount++;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
+		try
+		{
+			String[] aRomRefreshments = new String[4]; 
+			aRomRefreshments[0] = "Water"; aRomRefreshments[1] = "Mints"; aRomRefreshments[2] = "Coca-Cola"; aRomRefreshments[3] = "Sparkling Water";
+			SilverServiceCar aRomeo = new SilverServiceCar("ITA006", "Alfa Romeo", "Giulia", "Julia formaggio", 3, 3.60, aRomRefreshments);
+			aRomeo.book("Nick", "Tafazoli", new DateTime(1), 2);
+			cars[itemCount] = aRomeo; itemCount++;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
+		try
+		{
+			String[] porcheRefreshments= new String[5];
+			porcheRefreshments[0] = "Water"; porcheRefreshments[1] = "Chocolate"; porcheRefreshments[2] = "Pepsi"; porcheRefreshments[3] = "Lemonade"; porcheRefreshments[4] = "Chocolate-Chip Cookies";	
+			SilverServiceCar porche = new SilverServiceCar("XDF255", "Porche", "Panamera", "Mathew Stormblessed", 3, 4.50,porcheRefreshments);
+			porche.book("Simon", "Holmqvist", new DateTime(1), 3);
+			porche.completeBooking("Simon", "Holmqvist", 18);
+			cars[itemCount] = porche; itemCount++;
+		}
+		catch(Exception ex)
+		{
+			System.out.println(ex.getMessage());
+		}
 		return true;
 	}
 
@@ -421,7 +534,7 @@ public class MiRideApplication
 		return booking.getDetails();
 	}
 	
-	public String isValidId(String id)
+	public String isValidId(String id) throws Exception
 	{
 		return MiRidesUtilities.isRegNoValid(id);
 	}
@@ -464,18 +577,23 @@ public class MiRideApplication
 	
 	public  String createSilverCar(String id, String make, String model, String driverName, int numPassengers, double fee, String refreshmentsList)
 	{
-		
-		String validId = isValidId(id);
-		if(isValidId(id).contains("Error:"))
+		try
 		{
-			return validId;
-		}
-		if(!checkIfCarExists(id)) {
-			cars[itemCount] = new SilverServiceCar(id, make, model, driverName, numPassengers, fee, refreshmentsList.split(","));
-			itemCount++;
+			isValidId(id);
+
+			if(!checkIfCarExists(id))
+			{
+				cars[itemCount] = new SilverServiceCar(id, make, model, driverName, numPassengers, fee, refreshmentsList.split(","));
+				itemCount++;
 			return "New Car added successfully for registion number: " + cars[itemCount-1].getRegistrationNumber();
+			}
+		}
+		catch(Exception ex)
+		{
+			return ex.getMessage();
 		}
 		return "Error: Already exists in the system.";
+		
 	}
 	
 	public String searchAvailible(String type, DateTime required)
@@ -513,9 +631,16 @@ public class MiRideApplication
 		{
 			for(int i = 0; i < ssTemp.length; i = i + 1)
 			{
-				if(ssTemp[i] != null && ssTemp[i].bookingOnDate(required) && ssTemp[i].bookingAvailable())
+				try
 				{
-					avaCars = avaCars + ssTemp[i].getDetails();
+					if(ssTemp[i] != null && ssTemp[i].bookingOnDate(required) && ssTemp[i].bookingAvailable())
+					{
+						avaCars = avaCars + ssTemp[i].getDetails();
+					}
+				}
+				catch(Exception ex)
+				{
+					
 				}
 			}
 		}
@@ -523,10 +648,16 @@ public class MiRideApplication
 		{
 			for(int i = 0; i < carsTemp.length; i = i + 1)
 			{
-				if(carsTemp[i] != null && carsTemp[i].bookingOnDate(required) && carsTemp[i].bookingAvailable())
+				try
 				{
-					avaCars = avaCars + carsTemp[i].getDetails();
+					if(carsTemp[i] != null && carsTemp[i].bookingOnDate(required) && carsTemp[i].bookingAvailable())
+					{
+						avaCars = avaCars + carsTemp[i].getDetails();
+					}
 				}
+				catch(Exception ex)
+				{}
+				
 			}
 		}
 		if(avaCars.contentEquals(""))
@@ -535,6 +666,4 @@ public class MiRideApplication
 		}
 		return avaCars;
 	}
-	
-	
 }

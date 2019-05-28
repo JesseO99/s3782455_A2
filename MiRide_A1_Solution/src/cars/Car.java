@@ -35,7 +35,7 @@ public class Car
 	private int bookAdvanced = 7;
 
 	
-	public Car(String regNo, String make, String model, String driverName, int passengerCapacity)
+	public Car(String regNo, String make, String model, String driverName, int passengerCapacity) throws Exception
 	{
 		setRegNo(regNo); // Validates and sets registration number
 		setPassengerCapacity(passengerCapacity); // Validates and sets passenger capacity
@@ -69,24 +69,29 @@ public class Car
 	 * Booking six cars
 	 */
 
-	public boolean book(String firstName, String lastName, DateTime required, int numPassengers)
+	public boolean book(String firstName, String lastName, DateTime required, int numPassengers) throws Exception
 	{
 		boolean booked = false;
 		// Does car have five bookings
 		available = bookingAvailable();
-		boolean dateAvailable = notCurrentlyBookedOnDate(required);
-		// Date is within range, not in past and within the next week
-		boolean dateValid = dateIsValid(required);
-		// Number of passengers does not exceed the passenger capacity and is not zero.
-		boolean validPassengerNumber = numberOfPassengersIsValid(numPassengers);
-
-		// Booking is permissible
-		if (available && dateAvailable && dateValid && validPassengerNumber)
+		try
 		{
-			bookCar(firstName, lastName, required, numPassengers);
-			booked = true;
-		}
+		notCurrentlyBookedOnDate(required);
+		// Date is within range, not in past and within the next week
+		dateIsValid(required);
+		// Number of passengers does not exceed the passenger capacity and is not zero.
+		numberOfPassengersIsValid(numPassengers);
+		bookCar(firstName, lastName, required, numPassengers);
+		booked = true;
 		return booked;
+		}
+		catch(Exception ex)
+		{
+			throw ex;
+		}
+		// Booking is permissible
+
+
 	}
 	private void bookCar(String firstName, String lastName, DateTime required, int numPassengers)
 	{
@@ -99,14 +104,15 @@ public class Car
 	/*
 	 * Completes a booking based on the name of the passenger and the booking date.
 	 */
-	public String completeBooking(String firstName, String lastName, DateTime dateOfBooking, double kilometers)
+	public String completeBooking(String firstName, String lastName, DateTime dateOfBooking, double kilometers) throws Exception
 	{
 		// Find booking in current bookings by passenger and date
+		
 		int bookingIndex = getBookingByDate(firstName, lastName, dateOfBooking);
 
 		if (bookingIndex == -1)
 		{
-			return "Booking not found.";
+			throw new Exception();
 		}
 
 		return completeBooking(bookingIndex, kilometers);
@@ -115,13 +121,13 @@ public class Car
 	/*
 	 * Completes a booking based on the name of the passenger.
 	 */
-	public String completeBooking(String firstName, String lastName, double kilometers)
+	public String completeBooking(String firstName, String lastName, double kilometers) throws Exception
 	{
 		int bookingIndex = getBookingByName(firstName, lastName);
 
 		if (bookingIndex == -1)
 		{
-			return "Booking not found.";
+			throw new Exception("Error: Booking not found for " + firstName + " " + lastName);
 		} else
 		{
 			return completeBooking(bookingIndex, kilometers);
@@ -361,14 +367,17 @@ public class Car
 	/*
 	 * Checks to see if the number of passengers falls within the accepted range.
 	 */
-	private boolean numberOfPassengersIsValid(int numPassengers)
+	private boolean numberOfPassengersIsValid(int numPassengers) throws Exception
 	{
-		if (numPassengers >= MINIMUM_PASSENGER_CAPACITY && numPassengers < MAXIUM_PASSENGER_CAPACITY
-				&& numPassengers <= passengerCapacity)
+		if (numPassengers < MINIMUM_PASSENGER_CAPACITY) 
 		{
-			return true;
+			throw new Exception("Error: The number of passengers is less than " + MINIMUM_PASSENGER_CAPACITY);
 		}
-		return false;
+		if (numPassengers > MAXIUM_PASSENGER_CAPACITY)
+		{
+			throw new Exception("Error: The number of passengers is more than " + MAXIUM_PASSENGER_CAPACITY);
+		}
+		return true;
 	}
 
 	/*
@@ -399,7 +408,7 @@ public class Car
 	/*
 	 * Checks to see if if the car is currently booked on the date specified.
 	 */
-	private boolean notCurrentlyBookedOnDate(DateTime date)
+	private boolean notCurrentlyBookedOnDate(DateTime date) throws Exception
 	{
 		boolean foundDate = true;
 		for (int i = 0; i < currentBookings.length; i++)
@@ -409,24 +418,27 @@ public class Car
 				int days = DateTime.diffDays(date, currentBookings[i].getBookingDate());
 				if (days == 0)
 				{
+					foundDate = false;
 					return false;
 				}
 			}
 		}
-		return foundDate;
+		throw new Exception(this.toString() + "Is currently booked on date " + date.getFormattedDate());
 	}
 
 	/*
 	 * Validates and sets the registration number
 	 */
-	private void setRegNo(String regNo)
+	private void setRegNo(String regNo) throws Exception
 	{
-		if (!MiRidesUtilities.isRegNoValid(regNo).contains("Error:"))
+		try
 		{
+			MiRidesUtilities.isRegNoValid(regNo);
 			this.regNo = regNo;
-		} else
+		}
+		catch(Exception ex)
 		{
-			this.regNo = "Invalid";
+			throw ex;
 		}
 	}
 
@@ -496,7 +508,7 @@ public class Car
 		return pastBookingsDetails;
 	}
 	
-	public boolean bookingOnDate(DateTime required)
+	public boolean bookingOnDate(DateTime required) throws Exception
 	{
 		return !notCurrentlyBookedOnDate(required);
 	}

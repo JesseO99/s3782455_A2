@@ -7,7 +7,7 @@ public class SilverServiceCar extends Car
 {
 	private double minimumBookingFee = 3.00;
 	private String refreshments[] = new String[10];
-	public SilverServiceCar(String regNo, String make, String model, String driverName, int passengerCapacity, double bookingFee, String[] refreshments)
+	public SilverServiceCar(String regNo, String make, String model, String driverName, int passengerCapacity, double bookingFee, String[] refreshments) throws Exception
 	{
 		super(regNo, make, model, driverName, passengerCapacity);
 		super.setBookingFee(bookingFee);
@@ -27,7 +27,7 @@ public class SilverServiceCar extends Car
 		}
 	}
 	@Override
-	public boolean book(String firstName, String lastName, DateTime required, int numPassengers )
+	public boolean book(String firstName, String lastName, DateTime required, int numPassengers ) throws Exception
 	{
 		boolean booked = false;
 		if(DateUtilities.dateIsNotMoreThanXDays(required, 3))
