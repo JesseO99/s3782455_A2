@@ -21,14 +21,6 @@ public class MiRidesUtilities
 		}
 		return regNo;
 		// Regular expressions for validating the subcomponents of the registration number.
-		
-		
-		
-//		if(regNoLength == ID_LENGTH & letters & numbers)
-//		{
-//			return true;
-//		}
-//		return false;
 	}
 
 }

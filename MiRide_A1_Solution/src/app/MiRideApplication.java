@@ -171,9 +171,8 @@ public class MiRideApplication
 		return "Error: Booking not found.";
 	}
 	
-	public boolean getBookingByName(String firstName, String lastName, String registrationNumber)
+	public boolean getBookingByName(String firstName, String lastName, String registrationNumber) throws Exception
 	{
-		String bookingNotFound = "Error: Booking not found";
 		Car car = null;
 		// Search for car with registration number
 		for(int i = 0; i <cars.length; i++)
@@ -189,13 +188,13 @@ public class MiRideApplication
 		}
 		if(car == null)
 		{
-			return false;
+			throw new Exception("Error: Car not found");
 		}
 		if(car.getBookingByName(firstName, lastName) == -1)
 		{
-			return false;
+			throw new Exception("Error: Booking not found");
 		}
-		return false;
+		return true;
 	}
 	public String displaySpecificCar(String regNo)
 	{

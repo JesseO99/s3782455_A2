@@ -1,5 +1,6 @@
 package app;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import utilities.DateTime;
 import utilities.DateUtilities;
@@ -82,7 +83,6 @@ public class Menu
 	{
 		String id = "", make, model, driverName;
 		int numPassengers = 0;
-		String refreshments[];
 		String type;
 		
 		System.out.print("Enter registration number: ");
@@ -90,17 +90,10 @@ public class Menu
 		if (id.length() != 0)
 		{
 			// Get details required for creating a car.
-			System.out.print("Enter Make: ");
-			make = console.nextLine();
-			
-			System.out.print("Enter Model: ");
-			model = console.nextLine();
-
-			System.out.print("Enter Driver Name: ");
-			driverName = console.nextLine();
-
-			System.out.print("Enter number of passengers: ");
-			numPassengers = Integer.parseInt(console.nextLine());
+			make = askMake();
+			model = askModel();
+			driverName = askDriversName();
+			numPassengers = askNumPassengers();
 
 			boolean result = application.checkIfCarExists(id);
 			
@@ -120,6 +113,7 @@ public class Menu
 				String refreshmentsList = console.nextLine();
 
 				String carRegistrationNumber =  application.createSilverCar(id, make, model, driverName, numPassengers, fee, refreshmentsList);
+				System.out.println(carRegistrationNumber);
 			}
 			else
 			{
@@ -129,15 +123,99 @@ public class Menu
 			
 		}
 	}
+	
+	private String askMake()
+	{
+		String make;
+		System.out.print("Enter Make: ");
+		make = console.nextLine();
+		if(make.equals(""))
+		{
+			System.out.println("No Make Entered");
+			make = askMake();
+		}
+		return make;
+	}
+	
+	private String askModel()
+	{
+		String model;
+		System.out.print("Enter Model: ");
+		model = console.nextLine();
+		if(model.equals(""))
+		{
+			System.out.println("No Model Entered");
+			model = askMake();
+		}
+		return model;
+	}
+	
+	private String askDriversName()
+	{
+		String name;
+		System.out.print("Enter Driver Name: ");
+		name = console.nextLine();
+		if(name.equals(""))
+		{
+			System.out.println("No Driver Name Entered");
+			name = askMake();
+		}
+		return name;
+	}
+	
+	private int askNumPassengers()
+	{
+		int passengerCapacity;
+		System.out.print("Enter number of passengers: ");
+		try
+		{
+			passengerCapacity = console.nextInt();
+			console.nextLine();
+			if(1 > passengerCapacity || passengerCapacity > 9)
+			{
+				throw new NumberFormatException("The number of passengers is invalid please enter a valid number of Passengers.\n"
+						+ "The passenger capacity must be less than 10 and greater than 0");
+			}
+		}
+		catch(NumberFormatException ex)
+		{
+			System.out.println(ex.getMessage());
+			
+			passengerCapacity = askNumPassengers();
+		}
+		catch(InputMismatchException ex) 
+		{
+			console.nextLine();
+			System.out.println("The expected passenger capacicty is a nummber\n"
+					+ "Please enter a number");
+			passengerCapacity = askNumPassengers();
+		}
+		return passengerCapacity;
+	}
 
+	private int askPassengerCapacity()
+	{
+		int passengerCapacity;
+		try
+		{
+			System.out.println("Please enter the nummber of passengers");
+			passengerCapacity = console.nextInt();
+			console.hasNextLine();
+		}
+		catch(InputMismatchException ex)
+		{
+			System.out.println("Error: please input passenger capacity in number form");
+			passengerCapacity = askPassengerCapacity();
+		}
+		return passengerCapacity;
+	}
 	/*
 	 * Book a car by finding available cars for a specified date.
 	 */
 	private boolean book()
 	{
 		System.out.println("Enter date car required: ");
-		System.out.println("format DD/MM/YYYY)");
-		String dateEntered = console.nextLine();
+		String dateEntered = askDate();
 		int day = Integer.parseInt(dateEntered.substring(0, 2));
 		int month = Integer.parseInt(dateEntered.substring(3, 5));
 		int year = Integer.parseInt(dateEntered.substring(6));
@@ -195,14 +273,19 @@ public class Menu
 			System.out.print("Enter Last Name:");
 			String lastName = console.nextLine();
 			System.out.print("Enter kilometers:");
-			double kilometers = Double.parseDouble(console.nextLine());
-			int day = Integer.parseInt(response.substring(0, 2));
-			int month = Integer.parseInt(response.substring(3, 5));
-			int year = Integer.parseInt(response.substring(6));
-			DateTime dateOfBooking = new DateTime(day, month, year);
+			double kilometers = askKilometers();
 			try
 			{
+				int day = Integer.parseInt(response.substring(0, 2));
+				int month = Integer.parseInt(response.substring(3, 5));
+				int year = Integer.parseInt(response.substring(6));
+				DateTime dateOfBooking = new DateTime(day, month, year);
 				result = application.completeBooking(firstName, lastName, dateOfBooking, kilometers);
+			}
+			catch(NumberFormatException ex)
+			{
+				System.out.println("Error: Date in unreadable \nplease"
+						+ "use date foramat DD/MM/YYYY");	
 			}
 			catch(Exception ex)
 			{
@@ -216,16 +299,17 @@ public class Menu
 			String firstName = console.nextLine();
 			System.out.print("Enter Last Name:");
 			String lastName = console.nextLine();
-			if(application.getBookingByName(firstName, lastName, response))
+			try
 			{
+				application.getBookingByName(firstName, lastName, response);
 				System.out.print("Enter kilometers:");
 				double kilometers = Double.parseDouble(console.nextLine());
 				result = application.completeBooking(firstName, lastName, response, kilometers);
 				System.out.println(result);
 			}
-			else
+			catch(Exception ex)
 			{
-				System.out.println("Error: Booking not found.");
+				System.out.println(ex.getMessage());
 			}
 		}
 		
@@ -264,7 +348,7 @@ public class Menu
 				}
 				try
 				{
-					String validId = application.isValidId(regNo);
+					application.isValidId(regNo);
 					validRegistrationNumber = true;
 				}
 				catch(Exception ex)
@@ -323,27 +407,35 @@ public class Menu
 	private double getBookingFee()
 	{
 		double bookingFee = 0;
-		boolean bf = false;
-		while(!bf)
+		bookingFee = 0;
+		try 
 		{
 			bookingFee = 0;
 			System.out.print("$");
 			bookingFee = console.nextDouble();
 			console.nextLine();
-			if(bookingFee == 0)
+			if(bookingFee == 0)				
 			{
-				break;
+				return bookingFee;
 			}
 			else if(bookingFee < 3.00)
 			{
-				System.out.println("This is an ivalid booking fee \n"
-						+ "A booking fee for a silver service must be greater than $3.00.\n"
-						+ "(Or press enter with no text to exit");
+				throw new NumberFormatException("This is an ivalid booking fee \n"
+					+ "A booking fee for a silver service must be greater than $3.00.\n"
+					+ "(Or press enter with no text to exit");
 			}
-			else
-			{
-				break;
-			}
+		}
+		catch(InputMismatchException ex)
+		{
+			System.out.println("Please enter a booking Fee in the formmat \n"
+					+ "$X.XX\n"
+					+ "Enter Booking Fee");
+			bookingFee = getBookingFee();
+		}
+		catch(NumberFormatException ex)
+		{
+			System.out.println(ex.getMessage());
+			bookingFee = getBookingFee();
 		}
 		return bookingFee;
 	}
@@ -352,8 +444,8 @@ public class Menu
 	{
 		String type = getCarType();
 		System.out.println("Enter date car required: ");
-		System.out.println("format DD/MM/YYYY)");
-		String dateEntered = console.nextLine();
+		
+		String dateEntered = askDate();
 		int day = Integer.parseInt(dateEntered.substring(0, 2));
 		int month = Integer.parseInt(dateEntered.substring(3, 5));
 		int year = Integer.parseInt(dateEntered.substring(6));
@@ -366,6 +458,11 @@ public class Menu
 	{
 		System.out.println("Please enter the car type (SD/SS)");
 		String type = console.nextLine().toUpperCase();
+		if(!type.matches("SD") || !type.matches("SS"))
+		{
+			System.out.println("Error: invalid car type");
+			type = getCarType();
+		}
 		return type;
 	}
 	
@@ -376,4 +473,40 @@ public class Menu
 		return order;
 	}
 	
+	private String askDate()
+	{
+		System.out.println("format DD/MM/YYYY)");
+		String dateEntered = console.nextLine();
+		
+		try
+		{
+			int day = Integer.parseInt(dateEntered.substring(0, 2));
+			int month = Integer.parseInt(dateEntered.substring(3, 5));
+			int year = Integer.parseInt(dateEntered.substring(6));
+		}
+		catch(InputMismatchException ex)
+		{
+			System.out.println("Please input the correct date fornat");
+			dateEntered = askDate();
+		}
+		return dateEntered;
+	}
+
+	private double askKilometers()
+	{
+		double kilometers;
+		try
+		{
+			kilometers = console.nextDouble();
+			console.nextLine();
+		}
+		catch(InputMismatchException ex)
+		{
+			console.nextLine();
+			System.out.println("Error: Killometetrs unidentifable\n"
+					+ "Please enter the distance traveled in kilometers");
+			kilometers = askKilometers();
+		}
+		return kilometers;
+	}
 }
