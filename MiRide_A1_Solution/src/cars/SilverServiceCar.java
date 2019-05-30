@@ -3,10 +3,26 @@ package cars;
 import utilities.DateTime;
 import utilities.DateUtilities;
 
+/*
+ * Class:		Car
+ * Description:	The class represents a silver service car in a ride sharing system. 
+ * Original Author:		Jesse Osrecak
+ */
 public class SilverServiceCar extends Car
 {
-	private double minimumBookingFee = 3.00;
+	//Extra variables for Silver Service car
 	private String refreshments[] = new String[10];
+	/*
+	 * Constructor of Silver Service Car
+	 * ALGORITHM
+	 * BEGIN
+	 * 		CALL parent Constructor
+	 * 		SET	booking Fee
+	 * 		SET booking Advanced to 3
+	 * 		Set Refreshments
+	 * END
+	 * 
+	 */
 	public SilverServiceCar(String regNo, String make, String model, String driverName, int passengerCapacity, double bookingFee, String[] refreshments) throws Exception
 	{
 		super(regNo, make, model, driverName, passengerCapacity);
@@ -25,6 +41,12 @@ public class SilverServiceCar extends Car
 			}
 		}
 	}
+	/*
+	 * Books Car
+	 * Checks to see if car can be booked 
+	 * Throws exception if car cannot be booked and booking fails
+	 * 
+	 */
 	@Override
 	public boolean book(String firstName, String lastName, DateTime required, int numPassengers ) throws Exception
 	{
@@ -35,6 +57,10 @@ public class SilverServiceCar extends Car
 		}
 		return booked;
 	}
+	/*
+	 * Sets refreshments list
+	 * 
+	 */
 	private void setRefreshments(String refreshment)
 	{
 		for(int i = 0; i < refreshments.length; i = i + 1)
@@ -47,6 +73,9 @@ public class SilverServiceCar extends Car
 		}
 			
 	}
+	/*
+	 * Creates a string in a printable format for people to read and returns it to host method
+	 */
 	@Override 
 	public String getDetails()
 	{
@@ -66,6 +95,11 @@ public class SilverServiceCar extends Car
 		details = details + super.getPastBookings();
 		return details;
 	}
+	/*
+	 * Creates a string that the computer can read. 
+	 * Variables are separated by ':'
+	 * Refreshments are separated by ','
+	 */
 	@Override
 	public String toString()
 	{

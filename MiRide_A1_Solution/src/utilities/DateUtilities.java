@@ -1,7 +1,9 @@
 package utilities;
 
 public class DateUtilities {
-
+	/*
+	 * Checks to see if the date is in the past
+	 */
 	public static boolean dateIsNotInPast(DateTime date)
 	{
 		final int OFFSET_FOR_DAYS_IN_MILLISECONDS = 1;
@@ -17,7 +19,9 @@ public class DateUtilities {
 		
 		return notInPast;
 	}
-	
+	/*
+	 * Checks to see if the dates are the same
+	 */
 	public static boolean datesAreTheSame(DateTime date1, DateTime date2)
 	{
 		if(date1.getEightDigitDate().equals(date2.getEightDigitDate()))
@@ -26,7 +30,9 @@ public class DateUtilities {
 		}
 		return false;
 	}
-	
+	/*
+	 * Checks to see if date is more than 7 days 
+	 */
 	public static boolean dateIsNotMoreThan7Days(DateTime date)
 	{
 		
@@ -41,7 +47,9 @@ public class DateUtilities {
 		}
 		return within7Days;
 	}
-	
+	/*
+	 * Checks to see if date is more than 3 days than current date
+	 */
 	public static boolean dateIsNotMoreThan3Days(DateTime date)
 	{
 		boolean within3Days = false;
@@ -55,7 +63,9 @@ public class DateUtilities {
 		}
 		return within3Days;
 	}
-	
+	/*
+	 * Checks to see if date is more than x days than the current date
+	 */
 	public static boolean dateIsNotMoreThanXDays(DateTime date, int x)
 	{
 		boolean within3Days = false;
@@ -69,7 +79,9 @@ public class DateUtilities {
 		}
 		return within3Days;
 	}
-
+	/*
+	 * creates date object from eight digit date string
+	 */
 	public static DateTime getDateFromEightDigit(String eightDigitDate)
 	{
 		int day = Integer.parseInt(eightDigitDate.substring(0,2));

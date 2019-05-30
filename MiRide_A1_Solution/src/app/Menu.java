@@ -9,7 +9,8 @@ import utilities.DateUtilities;
 /*
  * Class:		Menu
  * Description:	The class a menu and is used to interact with the user. 
- * Author:		Rodney Cocker & Jesse Osrecak
+ * Original Author:		Rodney Cocker  
+ * Modified by:			Jesse Osrecak
  */
 public class Menu
 {
@@ -146,7 +147,9 @@ public class Menu
 			
 		}
 	}
-	
+	/*
+	 * Asking Mehods
+	 */
 	private String askMake()
 	{
 		String make;
@@ -404,6 +407,9 @@ public class Menu
 		System.out.println("\nEnter your selection: ");
 		System.out.println("(Hit enter to cancel any operation)");
 	}
+	/*
+	 * Ask user of car type
+	 */
 	private String promptUserForCarType()
 	{
 		boolean ctSuccess = false;
@@ -427,7 +433,9 @@ public class Menu
 		}
 		return choice;
 	}
-	
+	/*
+	 * Ask user for booking fee
+	 */
 	private double getBookingFee()
 	{
 		double bookingFee = 0;
@@ -463,7 +471,9 @@ public class Menu
 		}
 		return bookingFee;
 	}
-	
+	/*
+	 * Searches for availible cars for given date
+	 */
 	private String searchAvailible()
 	{
 		String type = getCarType();
@@ -477,7 +487,9 @@ public class Menu
 		
 		return application.searchAvailible(type, dateRequired);
 	}
-	
+	/*
+	 * Asks for car type
+	 */
 	private String getCarType()
 	{
 		System.out.println("Please enter the car type (SD/SS)");
@@ -493,14 +505,18 @@ public class Menu
 		}
 		return type;
 	}
-	
+	/*
+	 * Asks for sory type
+	 */
 	private String sortType()
 	{
 		System.out.println("Enter sort order (A/D)");
 		String order = console.nextLine().toUpperCase();
 		return order;
 	}
-	
+	/*
+	 * Ask for required date
+	 */
 	private String askDate()
 	{
 		System.out.println("format DD/MM/YYYY)");
@@ -519,7 +535,9 @@ public class Menu
 		}
 		return dateEntered;
 	}
-
+/*
+ * Ask for KM traveled
+ */
 	private double askKilometers()
 	{
 		double kilometers;

@@ -6,7 +6,8 @@ import utilities.DateUtilities;
  * Booking Class
  * Represents a booking in a ride sharing system.
  * This class can be used by other objects not just cars.
- * Author: Rodney Cocker & Jesse Osrecak
+ * Original Author: Rodney Cocker 
+ * Modified by: 	Jesse Osrecak
  */
 //
 public class Booking {
@@ -80,7 +81,6 @@ public class Booking {
 	/*
 	 * Computer readable state of the car
 	 */
-	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();

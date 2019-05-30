@@ -3,7 +3,9 @@ package utilities;
 public class MiRidesUtilities 
 {
 	private final static int ID_LENGTH = 6;
-	
+	/*
+	 * Checks to see if registration number is valid
+	 */
 	public static String isRegNoValid(String regNo) throws Exception
 	{
 		int regNoLength = regNo.length();

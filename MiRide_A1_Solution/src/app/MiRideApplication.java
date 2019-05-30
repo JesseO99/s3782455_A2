@@ -25,11 +25,10 @@ public class MiRideApplication
 	private int itemCount = 0;
 	private String[] availableCars;
 	private final String CARS_FILENAME = "cars.text";
-	public MiRideApplication()
-	{
-		//seedData();
-	}
-	
+
+	/*
+	 * Method used in creating a car
+	 */
 	public String createCar(String id, String make, String model, String driverName, int numPassengers) 
 	{
 		try
@@ -55,7 +54,10 @@ public class MiRideApplication
 		}
 		return "Error: Already exists in the system.";
 	}
-
+	
+	/*
+	 * Method used for getting a string of availible cars
+	 */
 	public String[] book(DateTime dateRequired)
 	{
 		int numberOfAvailableCars = 0;
@@ -93,6 +95,9 @@ public class MiRideApplication
 		return availableCars;
 	}
 	
+	/*
+	 * Method used for booking a car
+	 */
 	public String book(String firstName, String lastName, DateTime required, int numPassengers, String registrationNumber) 
 	{
 		try
@@ -116,7 +121,9 @@ public class MiRideApplication
 			return ex.getMessage();
 		}
 	}
-	
+	/*
+	 * Method used for completing a booking based on the date of Booking and name of the customer
+	 */
 	public String completeBooking(String firstName, String lastName, DateTime dateOfBooking, double kilometers) throws Exception
 	{
 		String result = "";
@@ -142,7 +149,9 @@ public class MiRideApplication
 		}
 		throw new Exception("Booking not found for " + firstName + " " + lastName + " for " + dateOfBooking.toString());
 	}
-	
+	/*
+	 * Method used for completing a booking based on the customers name and car registration number
+	 */
 	public String completeBooking(String firstName, String lastName, String registrationNumber, double kilometers)
 	{
 		String carNotFound = "Car not found";
@@ -177,7 +186,9 @@ public class MiRideApplication
 		}
 		return "Error: Booking not found.";
 	}
-	
+	/*
+	 * Method used to search for booking by name 
+	 */
 	public boolean getBookingByName(String firstName, String lastName, String registrationNumber) throws Exception
 	{
 		Car car = null;
@@ -203,6 +214,9 @@ public class MiRideApplication
 		}
 		return true;
 	}
+	/*
+	 * Method used for searching for a specific car
+	 */
 	public String displaySpecificCar(String regNo)
 	{
 		for(int i = 0; i < cars.length; i++)
@@ -217,7 +231,9 @@ public class MiRideApplication
 		}
 		return "Error: The car could not be located.";
 	}
-	
+	/*
+	 * Method used for creating a multitude of cars
+	 */
 	public boolean seedData()
 	{
 		for(int i = 0; i < cars.length; i++)
@@ -393,7 +409,9 @@ public class MiRideApplication
 		}
 		return true;
 	}
-
+	/*
+	 * Method used to display all the bookings. Sorts bookings by given order ascending or descending based on the cars registration number
+	 */
 	public String displayAllBookings(String type, String order)
 	{
 		if(itemCount == 0)
@@ -529,7 +547,9 @@ public class MiRideApplication
 
 		return sb.toString();
 	}
-
+	/*
+	 * Method used to display a specific booking
+	 */
 	public String displayBooking(String id, String seatId)
 	{
 		Car booking = getCarById(id);
@@ -539,12 +559,16 @@ public class MiRideApplication
 		}
 		return booking.getDetails();
 	}
-	
+	/*
+	 * Method used to check if a registration number is valid, is invalid throws an exception
+	 */
 	public String isValidId(String id) throws Exception
 	{
 		return MiRidesUtilities.isRegNoValid(id);
 	}
-
+	/*
+	 * Method used to check if car exists
+	 */
 	public boolean checkIfCarExists(String regNo)
 	{
 		Car car = null;
@@ -562,7 +586,9 @@ public class MiRideApplication
 			return true;
 		}
 	}
-	
+	/*
+	 * Method used to search for car by registration number
+	 */
 	private Car getCarById(String regNo)
 	{
 		Car car = null;
@@ -580,7 +606,9 @@ public class MiRideApplication
 		}
 		return car;
 	}
-	
+	/*
+	 * Method used to create a Silver Service car
+	 */
 	public  String createSilverCar(String id, String make, String model, String driverName, int numPassengers, double fee, String refreshmentsList)
 	{
 		try
@@ -601,7 +629,9 @@ public class MiRideApplication
 		return "Error: Already exists in the system.";
 		
 	}
-	
+	/*
+	 * Method used to search if car is available or silver service is available
+	 */
 	public String searchAvailible(String type, DateTime required)
 	{
 		Car[] carsTemp = new Car[15];
@@ -672,7 +702,10 @@ public class MiRideApplication
 		}
 		return avaCars;
 	}
-	
+	/*
+	 * Method used for saving data in a text file
+	 * Text file saves both cars and bookings held by cars
+	 */
 	public void saveData() throws IOException
 	{
 		System.out.printf("Saving %s...", CARS_FILENAME);
@@ -688,7 +721,9 @@ public class MiRideApplication
 			System.out.printf("Saved: %s", CARS_FILENAME);
 		}
 	}
-	
+	/*
+	 * Method loads cars and bookings held by cars
+	 */
 	public void loadCars() throws IOException, Exception
 	{
 		System.out.printf("Loading %s... ", CARS_FILENAME);
@@ -708,7 +743,9 @@ public class MiRideApplication
 		
 		
 	}
-	
+	/*
+	 * method used to add cars to an array
+	 */
 	private void addCar(Car car)
 	{
 		cars[itemCount] = car;

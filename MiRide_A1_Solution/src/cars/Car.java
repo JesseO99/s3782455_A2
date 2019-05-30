@@ -9,7 +9,8 @@ import utilities.MiRidesUtilities;
 /*
  * Class:		Car
  * Description:	The class represents a car in a ride sharing system. 
- * Author:		Rodney Cocker & Jesse Osrecak
+ * Original Author:		Rodney Cocker 
+ * Modified by: 		Jesse Osrecak
  */
 public class Car
 {
@@ -52,22 +53,10 @@ public class Car
 	 * Checks to see if the booking is permissible such as a valid date, number of
 	 * passengers, and general availability. Creates the booking only if conditions
 	 * are met and assigns the trip fee to be equal to the standard booking fee.
+	 * 
+	 * If booking has failed the method throws exception.
 	 */
 
-	/*
-	 * ALGORITHM BEGIN CHECK if car has five booking CHECK if car has a booking on
-	 * date requested CHECK if the date requested is in the past. CHECK if the
-	 * number of passengers requested exceeds the capacity of the car. IF any checks
-	 * fail return false to indicate the booking operation failed ELSE CREATE the
-	 * booking ADD the booking to the current booking array UPDATE the available
-	 * status if there are now five current bookings. RETURN true to indicate the
-	 * success of the booking. END
-	 * 
-	 * TEST Booking a car to carry 0, 10, & within/without passenger capacity.
-	 * Booking car on date prior to today Booking a car on a date that is more than
-	 * 7 days in advance. Booking car on a date for which it is already booked
-	 * Booking six cars
-	 */
 
 	public boolean book(String firstName, String lastName, DateTime required, int numPassengers) throws Exception
 	{
@@ -94,6 +83,8 @@ public class Car
 
 
 	}
+	
+	//Method actually books the car
 	private void bookCar(String firstName, String lastName, DateTime required, int numPassengers)
 	{
 		tripFee = bookingFee;
@@ -104,6 +95,8 @@ public class Car
 
 	/*
 	 * Completes a booking based on the name of the passenger and the booking date.
+	 * 
+	 * Throws exception if the booking failed
 	 */
 	public String completeBooking(String firstName, String lastName, DateTime dateOfBooking, double kilometers) throws Exception
 	{
@@ -113,7 +106,7 @@ public class Car
 
 		if (bookingIndex == -1)
 		{
-			throw new Exception();
+			throw new Exception("Error: Booking not found for " + firstName + " " + lastName);
 		}
 
 		return completeBooking(bookingIndex, kilometers);
@@ -121,6 +114,8 @@ public class Car
 
 	/*
 	 * Completes a booking based on the name of the passenger.
+	 * 
+	 * throws Exception if booking failed
 	 */
 	public String completeBooking(String firstName, String lastName, double kilometers) throws Exception
 	{
@@ -137,9 +132,7 @@ public class Car
 
 	/*
 	 * Checks the current bookings to see if any of the bookings are for the current
-	 * date. ALGORITHM BEGIN CHECK All bookings IF date supplied matches date for
-	 * any booking date Return true ELSE Return false END
-	 * 
+	 * date. 
 	 */
 	public boolean isCarBookedOnDate(DateTime dateRequired)
 	{
@@ -207,6 +200,9 @@ public class Car
 
 	/*
 	 * Computer readable state of the car
+	 * Variables separated by ':'
+	 * Bookings separated by ';'
+	 * Parts of bookings separated by ','
 	 */
 
 	public String toString()
@@ -369,6 +365,8 @@ public class Car
 
 	/*
 	 * Checks to see if the number of passengers falls within the accepted range.
+	 * 
+	 * Throws Exception if does not meet requirements
 	 */
 	private boolean numberOfPassengersIsValid(int numPassengers) throws Exception
 	{
@@ -410,6 +408,7 @@ public class Car
 
 	/*
 	 * Checks to see if if the car is currently booked on the date specified.
+	 * Throws exception if car is currently booked on date
 	 */
 	private boolean notCurrentlyBookedOnDate(DateTime date) throws Exception
 	{
@@ -432,6 +431,8 @@ public class Car
 
 	/*
 	 * Validates and sets the registration number
+	 * 
+	 * throws Exception if RegNo is not valid
 	 */
 	private void setRegNo(String regNo) throws Exception
 	{
@@ -463,6 +464,9 @@ public class Car
 		}
 	}
 	
+	/*
+	 * More required getters and setters
+	 */
 	public void setBookingFee(double bookingFee)
 	{
 		bookingFee = this.bookingFee;
@@ -512,30 +516,53 @@ public class Car
 		return pastBookingsDetails;
 	}
 	
+	/*
+	 * Checks to see if booking is on Date required
+	 * 
+	 * Throws Exception if currently booked on the given date
+	 */
 	public boolean bookingOnDate(DateTime required) throws Exception
 	{
 		return !notCurrentlyBookedOnDate(required);
 	}
-
+	/*
+	 * Required getter for creating Car from loading saved text document
+	 * Throws Exception if car creation failed.
+	 * ALGORTIHM
+	 * BEGIN
+	 *	 SPLIT car details into individual components
+	 *	 DECIFER if the car is a Standard car or a silver Service Car
+	 *	 CREATE Car or Silver Service Car
+	 *	 CHECK IF there exists past bookings
+	 *			SPLIT bookings into individual bookings
+	 *				SPLIT booking into individual components
+	 *	 			CREATE booking for each past booking
+	 *				COMPLETE bookings for each past booking
+	 *	 CHECK IF there exists any current bookings
+	 *			SPLIT booking into individual bookings
+	 *			SPLIT booking into individual components
+	 *	 RETURN Car
+	 * END
+	 */
 	public static Car getCar(String text) throws Exception
 	{
 		String[] tokens = text.split(":");
 
 		try
 		{	
-			 if(tokens.length > 8)
+			 if(tokens.length > 8) //Checks to see if Car is a Silver Service Car
 			{
 				SilverServiceCar car = new SilverServiceCar(tokens[0], tokens[1], tokens[2], tokens[3], Integer.parseInt(tokens[4]), Double.parseDouble(tokens[8]), tokens[9].split(","));
 				
 				
 				if(!tokens[7].equals(""))
 				{
-					String[] pastBookings = tokens[7].split(";");
+					String[] pastBookings = tokens[7].split(";"); // Splits up past bookings
 					for(int i = 0; i < pastBookings.length; i ++ )
 					{
 						if(!pastBookings.equals(""))
 						{
-							String[] pastBooking = pastBookings[i].split(",");
+							String[] pastBooking = pastBookings[i].split(","); //Splits up past Booking into individual components
 							car.book(pastBooking[3], pastBooking[4], DateUtilities.getDateFromEightDigit(pastBooking[2]), Integer.parseInt(pastBooking[5]));
 							car.completeBooking(pastBooking[3], pastBooking[4], DateUtilities.getDateFromEightDigit(pastBooking[2]), Double.parseDouble(pastBooking[6]));
 						}
@@ -549,12 +576,12 @@ public class Car
 				
 				if(!tokens[6].equals(""))
 				{
-					String[] currentBookings = tokens[6].split(";");
+					String[] currentBookings = tokens[6].split(";"); //Splits up current bookings
 					for(int i = 0; i < currentBookings.length; i++)
 					{	
 						if(!currentBookings[i].equals(""))
 						{
-							String[] currentBooking = currentBookings[i].split(",");
+							String[] currentBooking = currentBookings[i].split(","); //Splits up current bookings into individual components
 							car.book(currentBooking[3], currentBooking[4], DateUtilities.getDateFromEightDigit(currentBooking[2]), Integer.parseInt(currentBooking[5]));
 						}
 						else
@@ -567,20 +594,20 @@ public class Car
 				
 				return car;
 			}
-			else
-			{
+			else //Bookings current car as a standard car
+			{	
 				Car car =  new Car(tokens[0], tokens[1], tokens[2], tokens[3], Integer.parseInt(tokens[4]));
 				
 			
 				if(tokens.length == 8)
 				 
 				{
-					String[] pastBookings = tokens[7].split(";");
+					String[] pastBookings = tokens[7].split(";"); //Splits up past bookings into individual bookings
 					for(int i = 0; i < pastBookings.length; i ++ )
 					{
 						if(!pastBookings.equals(""))
 						{
-							String[] pastBooking = pastBookings[i].split(",");
+							String[] pastBooking = pastBookings[i].split(",");//SPlits up past bookings into individual components
 							car.book(pastBooking[3], pastBooking[4], DateUtilities.getDateFromEightDigit(pastBooking[2]), Integer.parseInt(pastBooking[5]));
 							car.completeBooking(pastBooking[3], pastBooking[4], DateUtilities.getDateFromEightDigit(pastBooking[2]), Double.parseDouble(pastBooking[6]));
 						}
@@ -593,13 +620,13 @@ public class Car
 				
 				if(!tokens[6].equals(""))
 				{
-					String[] currentBookings = tokens[6].split(";");
+					String[] currentBookings = tokens[6].split(";");//Splits up current bookings into individual bookings
 					
 					for(int i = 0; i < currentBookings.length; i++)
 					{
 						if(!currentBookings[i].equals(""))
 						{
-							String[] currentBooking = currentBookings[i].split(",");
+							String[] currentBooking = currentBookings[i].split(","); //Splits up current booking into individual components
 							car.book(currentBooking[3], currentBooking[4], DateUtilities.getDateFromEightDigit(currentBooking[2]), Integer.parseInt(currentBooking[5]));
 						}
 						else
