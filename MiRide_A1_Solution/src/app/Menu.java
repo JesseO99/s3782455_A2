@@ -44,7 +44,6 @@ public class Menu
 
 			input = console.nextLine().toUpperCase();
 
-			System.out.println(input);
 			if (input.length() != MENU_ITEM_LENGTH)
 			{
 				System.out.println("Error - selection must be two characters!");
@@ -483,10 +482,8 @@ public class Menu
 	{
 		System.out.println("Please enter the car type (SD/SS)");
 		String type = console.nextLine().toUpperCase();
-		System.out.println(type);
 		if(type.equals("SD") || type.equals("SS"))
 		{
-			System.out.println("Success");
 			return type;
 		}
 		else
