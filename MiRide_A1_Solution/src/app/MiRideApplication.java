@@ -1,5 +1,12 @@
 package app;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import cars.Car;
 import cars.SilverServiceCar;
 import utilities.DateTime;
@@ -17,7 +24,7 @@ public class MiRideApplication
 	
 	private int itemCount = 0;
 	private String[] availableCars;
-
+	private final String CARS_FILENAME = "cars.text";
 	public MiRideApplication()
 	{
 		//seedData();
@@ -664,5 +671,47 @@ public class MiRideApplication
 			avaCars = "Error - no cars were found on this date";
 		}
 		return avaCars;
+	}
+	
+	public void saveData() throws IOException
+	{
+		System.out.printf("Saving %s...", CARS_FILENAME);
+		
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(CARS_FILENAME)))
+		{
+			for(int i = 0; i < itemCount; i++) 
+			{
+				writer.write(cars[i].toString());
+				writer.write('\n');
+			}
+			
+			System.out.printf("Saved: %s", CARS_FILENAME);
+		}
+	}
+	
+	public void loadCars() throws IOException, Exception
+	{
+		System.out.printf("Loading %s... ", CARS_FILENAME);
+		if(!new File(CARS_FILENAME).isFile())
+		{
+			return;
+		}
+		
+		try(BufferedReader reader = new BufferedReader(new FileReader(CARS_FILENAME)))
+		{
+			while(reader.ready())
+			{
+				addCar(Car.getCar(reader.readLine()));
+			}
+			System.out.println("Done");
+		}
+		
+		
+	}
+	
+	private void addCar(Car car)
+	{
+		cars[itemCount] = car;
+		itemCount++;
 	}
 }

@@ -69,4 +69,13 @@ public class DateUtilities {
 		}
 		return within3Days;
 	}
+
+	public static DateTime getDateFromEightDigit(String eightDigitDate)
+	{
+		int day = Integer.parseInt(eightDigitDate.substring(0,2));
+		int month = Integer.parseInt(eightDigitDate.substring(2,4));
+		int year = Integer.parseInt(eightDigitDate.substring(4));
+		DateTime date = new DateTime(day, month, year);
+		return date;
+	}
 }

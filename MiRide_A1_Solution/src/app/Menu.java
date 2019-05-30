@@ -1,5 +1,6 @@
 package app;
 
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import utilities.DateTime;
@@ -23,6 +24,17 @@ public class Menu
 	 */
 	public void run()
 	{
+		try
+		{
+			application.loadCars();
+			//console.nextLine();
+		}
+		catch(Exception ex)
+		{
+			System.out.println("Error:" + ex.getMessage());
+		}
+
+		
 		final int MENU_ITEM_LENGTH = 2;
 		String input;
 		String choice = "";
@@ -32,6 +44,7 @@ public class Menu
 
 			input = console.nextLine().toUpperCase();
 
+			System.out.println(input);
 			if (input.length() != MENU_ITEM_LENGTH)
 			{
 				System.out.println("Error - selection must be two characters!");
@@ -63,6 +76,17 @@ public class Menu
 				case "SD":
 					application.seedData();
 					break;
+				case "SP":
+					System.out.println("Saving Data");
+					try
+					{
+						application.saveData();
+					}
+					catch(IOException ex)
+					{
+						System.out.println("Error" + ex.getMessage());
+					}
+					break;
 				case "EX":
 					System.out.println("Exiting Program ... Goodbye!");
 					choice = "EX";
@@ -93,7 +117,7 @@ public class Menu
 			make = askMake();
 			model = askModel();
 			driverName = askDriversName();
-			numPassengers = askNumPassengers();
+			numPassengers = askPassengerCapacity();
 
 			boolean result = application.checkIfCarExists(id);
 			
@@ -245,7 +269,7 @@ public class Menu
 			System.out.println("Please enter your last name:");
 			String lastName = console.nextLine();
 			System.out.println("Please enter the number of passengers:");
-			int numPassengers = Integer.parseInt(console.nextLine());
+			int numPassengers = askNumPassengers();
 			String result = application.book(firstName, lastName, dateRequired, numPassengers, regNo);
 
 			System.out.println(result);
@@ -376,6 +400,7 @@ public class Menu
 		System.out.printf("%-30s %s\n", "Search Specific Car", "SS");
 		System.out.printf("%-30s %s\n", "Search Available Cars", "SA");
 		System.out.printf("%-30s %s\n", "Seed Data", "SD");
+		System.out.printf("%-30s %s\n", "Save Data","SP");
 		System.out.printf("%-30s %s\n", "Exit Program", "EX");
 		System.out.println("\nEnter your selection: ");
 		System.out.println("(Hit enter to cancel any operation)");
@@ -458,7 +483,13 @@ public class Menu
 	{
 		System.out.println("Please enter the car type (SD/SS)");
 		String type = console.nextLine().toUpperCase();
-		if(!type.matches("SD") || !type.matches("SS"))
+		System.out.println(type);
+		if(type.equals("SD") || type.equals("SS"))
+		{
+			System.out.println("Success");
+			return type;
+		}
+		else
 		{
 			System.out.println("Error: invalid car type");
 			type = getCarType();

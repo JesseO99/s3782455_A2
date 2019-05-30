@@ -71,11 +71,12 @@ public class SilverServiceCar extends Car
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(super.toString());
+		sb.append(":" + super.getBookingFee() + ":");
 		for(int i = 0; i < refreshments.length; i = i + 1)
 		{
 			if(refreshments[i] != null)
 			{
-				sb.append(":" + refreshments[i]);
+				sb.append(refreshments[i] + ",");
 			}
 		}
 		return sb.toString();

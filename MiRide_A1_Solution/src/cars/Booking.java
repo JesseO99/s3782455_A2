@@ -85,20 +85,20 @@ public class Booking {
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(id);
-		sb.append(":" + bookingFee);
+		sb.append("," + bookingFee);
 		if(dateBooked != null)
 		{
-			sb.append(":" + dateBooked.getEightDigitDate());
+			sb.append("," + dateBooked.getEightDigitDate());
 		}
 		else
 		{
-			sb.append(":" + "Invalid");
+			sb.append("," + "Invalid");
 		}
-		sb.append(":" + firstName + " " + lastName);
-		sb.append(":" + numPassengers);
-		sb.append(":" + kilometersTravelled);
-		sb.append(":" + tripFee);
-		sb.append(":" + car.getRegistrationNumber());
+		sb.append("," + firstName + "," + lastName);
+		sb.append("," + numPassengers);
+		sb.append("," + kilometersTravelled);
+		sb.append("," + tripFee);
+		sb.append("," + car.getRegistrationNumber());
 		
 		return sb.toString();
 	}

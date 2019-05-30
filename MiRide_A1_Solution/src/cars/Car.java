@@ -87,6 +87,7 @@ public class Car
 		}
 		catch(Exception ex)
 		{
+			System.out.println("Booking Failed");
 			throw ex;
 		}
 		// Booking is permissible
@@ -224,18 +225,20 @@ public class Car
 		{
 			sb.append(":" + "NO");
 		}
+		sb.append(":");
 		for(int i = 0; i < currentBookings.length; i = i + 1)
 		{
 			if(currentBookings[i] != null)
 			{
-				sb.append(":" + currentBookings[i].toString());
+				sb.append( currentBookings[i].toString()+ ";");
 			}
 		}
+		sb.append(":");
 		for(int j = 0; j < pastBookings.length; j = j + 1)
 		{
 			if(pastBookings[j] != null)
 			{
-				sb.append(":" + pastBookings[j].toString());
+				sb.append(pastBookings[j].toString() + ";");
 			}
 		}
 		return sb.toString();
@@ -418,12 +421,13 @@ public class Car
 				int days = DateTime.diffDays(date, currentBookings[i].getBookingDate());
 				if (days == 0)
 				{
-					foundDate = false;
-					return false;
+					throw new Exception(this.toString() + "Is currently booked on date " + date.getFormattedDate());
 				}
 			}
+			
 		}
-		throw new Exception(this.toString() + "Is currently booked on date " + date.getFormattedDate());
+		return foundDate;
+		
 	}
 
 	/*
@@ -513,4 +517,107 @@ public class Car
 		return !notCurrentlyBookedOnDate(required);
 	}
 
+	public static Car getCar(String text) throws Exception
+	{
+		String[] tokens = text.split(":");
+
+		try
+		{	
+			 if(tokens.length > 8)
+			{
+				SilverServiceCar car = new SilverServiceCar(tokens[0], tokens[1], tokens[2], tokens[3], Integer.parseInt(tokens[4]), Double.parseDouble(tokens[8]), tokens[9].split(","));
+				
+				
+				if(!tokens[7].equals(""))
+				{
+					String[] pastBookings = tokens[7].split(";");
+					for(int i = 0; i < pastBookings.length; i ++ )
+					{
+						if(!pastBookings.equals(""))
+						{
+							String[] pastBooking = pastBookings[i].split(",");
+							car.book(pastBooking[3], pastBooking[4], DateUtilities.getDateFromEightDigit(pastBooking[2]), Integer.parseInt(pastBooking[5]));
+							car.completeBooking(pastBooking[3], pastBooking[4], DateUtilities.getDateFromEightDigit(pastBooking[2]), Double.parseDouble(pastBooking[6]));
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+					
+				
+				if(!tokens[6].equals(""))
+				{
+					String[] currentBookings = tokens[6].split(";");
+					for(int i = 0; i < currentBookings.length; i++)
+					{	
+						if(!currentBookings[i].equals(""))
+						{
+							String[] currentBooking = currentBookings[i].split(",");
+							car.book(currentBooking[3], currentBooking[4], DateUtilities.getDateFromEightDigit(currentBooking[2]), Integer.parseInt(currentBooking[5]));
+						}
+						else
+						{
+							break;
+						}
+						
+					}
+				}
+				
+				return car;
+			}
+			else
+			{
+				Car car =  new Car(tokens[0], tokens[1], tokens[2], tokens[3], Integer.parseInt(tokens[4]));
+				
+			
+				if(tokens.length == 8)
+				 
+				{
+					String[] pastBookings = tokens[7].split(";");
+					for(int i = 0; i < pastBookings.length; i ++ )
+					{
+						if(!pastBookings.equals(""))
+						{
+							String[] pastBooking = pastBookings[i].split(",");
+							car.book(pastBooking[3], pastBooking[4], DateUtilities.getDateFromEightDigit(pastBooking[2]), Integer.parseInt(pastBooking[5]));
+							car.completeBooking(pastBooking[3], pastBooking[4], DateUtilities.getDateFromEightDigit(pastBooking[2]), Double.parseDouble(pastBooking[6]));
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+				
+				if(!tokens[6].equals(""))
+				{
+					String[] currentBookings = tokens[6].split(";");
+					
+					for(int i = 0; i < currentBookings.length; i++)
+					{
+						if(!currentBookings[i].equals(""))
+						{
+							String[] currentBooking = currentBookings[i].split(",");
+							car.book(currentBooking[3], currentBooking[4], DateUtilities.getDateFromEightDigit(currentBooking[2]), Integer.parseInt(currentBooking[5]));
+						}
+						else
+						{
+							break;
+						}
+						
+					}
+				}
+				
+				return car;
+			}
+	
+		}
+		catch(Exception ex)
+		{
+			throw ex;
+		}
+		
+	}
 }
